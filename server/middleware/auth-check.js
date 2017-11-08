@@ -2,7 +2,7 @@
  * Created by Ruslan on 11/6/2017.
  */
 const jwt = require('jsonwebtoken');
-const User = require('mongoose').model('User');
+// const User = require('mongoose').model('User');
 const config = require('../../config');
 
 

@@ -2,58 +2,66 @@
  * Created by Ruslan on 11/6/2017.
  */
 const jwt = require('jsonwebtoken');
-const User = require('mongoose').model('User');
+const bcrypt = require("bcrypt");
 const PassportLocalStrategy = require('passport-local').Strategy;
-const config = require('../../config');
-
+const config = require("../../config");
+const helpers = require("./helpers");
 
 /**
  * Return the Passport Local Strategy object.
  */
-module.exports = new PassportLocalStrategy({
-  usernameField: 'email',
-  passwordField: 'password',
-  session: false,
-  passReqToCallback: true
-}, (req, email, password, done) => {
-  const userData = {
-    email: email.trim(),
-    password: password.trim()
-  };
+function loginMiddleware (sql) {
 
-  // find a user by email address
-  return User.findOne({ email: userData.email }, (err, user) => {
-    if (err) { return done(err); }
+    return new PassportLocalStrategy({
+        usernameField: 'email',
+        passwordField: 'password',
+        session: false,
+        passReqToCallback: true
+    }, (req, email, password, done) => {
+        const userData = {
+            email: email.trim(),
+            password: password.trim(),
+        };
 
-    if (!user) {
-      const error = new Error('Incorrect email or password');
-      error.name = 'IncorrectCredentialsError';
+        sql.getUser(userData.email).then((user) => {
+            if (user === undefined) {
+                console.log("Wrong email");
 
-      return done(error);
-    }
+                const error = new Error('Incorrect email or password');
+                error.name = 'IncorrectCredentialsError';
 
-    // check if a hashed user's password is equal to a value saved in the database
-    return user.comparePassword(userData.password, (passwordErr, isMatch) => {
-      if (err) { return done(err); }
+                return done(error);
+            } else {
+                return helpers.comparePassword(userData.password, user.password).then((isMatch) => {
+                    if (!isMatch) {
+                        console.log("Wrong password");
 
-      if (!isMatch) {
-        const error = new Error('Incorrect email or password');
-        error.name = 'IncorrectCredentialsError';
+                        const error = new Error('Incorrect email or password');
+                        error.name = 'IncorrectCredentialsError';
 
-        return done(error);
-      }
+                        return done(error);
+                    }
 
-      const payload = {
-        sub: user._id
-      };
+                    const payload = {
+                        sub: user.id
+                    };
 
-      // create a token string
-      const token = jwt.sign(payload, config.jwtSecret);
-      const data = {
-        name: user.name
-      };
+                    // create a token string
+                    const token = jwt.sign(payload, config.jwtSecret);
+                    const data = {
+                        name: user.username
+                    };
 
-      return done(null, token, data);
+                    return done(null, token, data);
+                });
+            }
+
+        }).catch((err) => {
+            return done(err);
+        });
     });
-  });
-});
+}
+
+module.exports = (db) => {
+    return loginMiddleware(db);
+};
