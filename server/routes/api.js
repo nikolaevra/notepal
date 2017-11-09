@@ -6,7 +6,7 @@ const router = new express.Router();
 const debug = require('debug')('route:api');
 
 router.get('/dashboard', (req, res) => {
-    debug(`${req.method} ${req.url}`);
+    debug(`[200] ${req.method} ${req.url}`);
 
     res.status(200).json({
         message: "You're authorized to see this secret message."

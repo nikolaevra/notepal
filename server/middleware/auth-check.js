@@ -10,8 +10,6 @@ const debug = require('debug')('mid:auth-check');
  */
 function gen_auth_middleware (sql) {
     return function (req, res, next) {
-        debug(`${req.method} ${req.url}`);
-
         if (!req.headers.authorization) {
             return res.status(401).end();
         }
@@ -23,17 +21,20 @@ function gen_auth_middleware (sql) {
         return jwt.verify(token, secret.jwtSecret, (err, decoded) => {
             // the 401 code is for unauthorized status
             if (err) {
+                debug(`[401] ${req.method} ${req.url}: Cannot verify JWT token`);
                 return res.status(401).end();
             }
 
             const userId = decoded.sub;
 
             // check if a user exists
-            return sql.getUser(userId).then((user) => {
+            return sql.getUserById(userId).then((user) => {
                 if (!user) {
+                    debug(`[401] ${req.method} ${req.url}: Cannot find user in DB`);
                     return res.status(401).end();
                 }
 
+                debug(`[200] ${req.method} ${req.url}: Found user in DB`);
                 return next();
             });
         });

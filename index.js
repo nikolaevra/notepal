@@ -12,7 +12,7 @@ const pg_db = require('./server/db');
 
 const localSignupStrategy = require('./server/passport/local-signup')(pg_db);
 const localLoginStrategy = require('./server/passport/local-login')(pg_db);
-// const authCheckMiddleware = require('./server/middleware/auth-check')(pg_db);
+const authCheckMiddleware = require('./server/middleware/auth-check')(pg_db);
 const authRoutes = require('./server/routes/auth');
 const apiRoutes = require('./server/routes/api');
 
@@ -32,7 +32,7 @@ passport.use('local-signup', localSignupStrategy);
 passport.use('local-login', localLoginStrategy);
 
 // pass the authenticaion checker middleware
-// app.use('/api', authCheckMiddleware);
+app.use('/api', authCheckMiddleware);
 
 // routes
 app.use('/auth', authRoutes);

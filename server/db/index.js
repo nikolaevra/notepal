@@ -21,10 +21,17 @@ function encrypt (word) {
 }
 
 module.exports = {
-    getUser: async function (email) {
-        debug(`getUser: ${email}`);
+    getUserByEmail: async function (email) {
+        debug(`getUserByEmail: ${email}`);
         //noinspection UnnecessaryLocalVariableJS
         const result = await _sql.query(`SELECT * FROM notepal.notepal.t_user WHERE email='${esc(email)}' LIMIT 1;`);
+        return result.rows[0];
+    },
+
+    getUserById: async function (id) {
+        debug(`getUserById: ${id}`);
+        //noinspection UnnecessaryLocalVariableJS
+        const result = await _sql.query(`SELECT * FROM notepal.notepal.t_user WHERE id='${esc(id)}' LIMIT 1;`);
         return result.rows[0];
     },
 

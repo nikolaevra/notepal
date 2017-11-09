@@ -2,6 +2,7 @@
  * Created by Ruslan on 11/6/2017.
  */
 const PassportLocalStrategy = require('passport-local').Strategy;
+const debug = require('debug')('local-signup');
 
 /**
  * Return the Passport Local Strategy object.
@@ -20,6 +21,7 @@ function signupMiddleware (sql) {
 
         let result = sql.addUser(un, e, pw);
         if (result) {
+            debug(`new user ${un} created`);
             return done(null);
         } else {
             return done("error message");

@@ -23,7 +23,7 @@ function loginMiddleware (sql) {
             password: password.trim(),
         };
 
-        sql.getUser(userData.email).then((user) => {
+        sql.getUserByEmail(userData.email).then((user) => {
             if (user === undefined) {
                 console.log("Wrong email");
 
