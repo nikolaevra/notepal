@@ -1,7 +1,7 @@
 const express = require('express');
 const validator = require('validator');
 const passport = require('passport');
-
+const debug = require('debug')('route:auth');
 const router = new express.Router();
 
 /**
@@ -76,6 +76,8 @@ function validateLoginForm(payload) {
 }
 
 router.post('/signup', (req, res, next) => {
+    debug(`${req.method} ${req.url}`);
+
     const validationResult = validateSignupForm(req.body);
     if (!validationResult.success) {
         return res.status(400).json({
@@ -114,6 +116,8 @@ router.post('/signup', (req, res, next) => {
 });
 
 router.post('/login', (req, res, next) => {
+    debug(`${req.method} ${req.url}`);
+
     const validationResult = validateLoginForm(req.body);
     if (!validationResult.success) {
         return res.status(400).json({

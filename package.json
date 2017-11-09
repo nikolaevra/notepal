@@ -1,21 +1,24 @@
 {
-  "name": "authentication-in-react-apps",
+  "name": "notepal",
   "version": "1.0.0",
-  "description": "Authentication in React Applications, Part 1: Creating Components",
+  "description": "A web application",
   "main": "index.js",
   "scripts": {
     "start": "nodemon --use_strict index.js",
+    "debug": "set DEBUG=express,database,mid:auth-check,route:auth,route:api & nodemon --use_strict index.js",
+    "nodebug": "set DEBUG=",
     "bundle": "webpack"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/vladimirponomarev/authentication-in-react-apps.git"
+    "url": "https://github.com/nikolaevra/notepal.git"
   },
-  "author": "Vladimir Ponomarev",
+  "author": "Ruslan Nikolaev",
   "license": "MIT",
   "dependencies": {
     "bcrypt": "^1.0.3",
     "body-parser": "^1.15.2",
+    "debug": "^3.1.0",
     "express": "^4.14.0",
     "jsonwebtoken": "^8.1.0",
     "material-ui": "^0.16.5",

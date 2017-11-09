@@ -2,35 +2,44 @@
  * Created by Ruslan on 11/6/2017.
  */
 const jwt = require('jsonwebtoken');
-// const User = require('mongoose').model('User');
-const config = require('../../config');
-
+const secret = require('../../secret');
+const debug = require('debug')('mid:auth-check');
 
 /**
  *  The Auth Checker middleware function.
  */
-module.exports = (req, res, next) => {
-  if (!req.headers.authorization) {
-    return res.status(401).end();
-  }
+function gen_auth_middleware (sql) {
+    return function (req, res, next) {
+        debug(`${req.method} ${req.url}`);
 
-  // get the last part from a authorization header string like "bearer token-value"
-  const token = req.headers.authorization.split(' ')[1];
+        if (!req.headers.authorization) {
+            return res.status(401).end();
+        }
 
-  // decode the token using a secret key-phrase
-  return jwt.verify(token, config.jwtSecret, (err, decoded) => {
-    // the 401 code is for unauthorized status
-    if (err) { return res.status(401).end(); }
+        // get the last part from a authorization header string like "bearer token-value"
+        const token = req.headers.authorization.split(' ')[1];
 
-    const userId = decoded.sub;
+        // decode the token using a secret key-phrase
+        return jwt.verify(token, secret.jwtSecret, (err, decoded) => {
+            // the 401 code is for unauthorized status
+            if (err) {
+                return res.status(401).end();
+            }
 
-    // check if a user exists
-    return User.findById(userId, (userErr, user) => {
-      if (userErr || !user) {
-        return res.status(401).end();
-      }
+            const userId = decoded.sub;
 
-      return next();
-    });
-  });
+            // check if a user exists
+            return sql.getUser(userId).then((user) => {
+                if (!user) {
+                    return res.status(401).end();
+                }
+
+                return next();
+            });
+        });
+    };
+}
+
+module.exports = (db) => {
+    return gen_auth_middleware(db);
 };

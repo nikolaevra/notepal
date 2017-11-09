@@ -1,5 +1,5 @@
 .idea
 node_modules
-config
 package-lock.json
 client/dist
+secret

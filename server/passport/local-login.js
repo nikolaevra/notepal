@@ -4,7 +4,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require("bcrypt");
 const PassportLocalStrategy = require('passport-local').Strategy;
-const config = require("../../config");
+const secret = require("../../secret");
 const helpers = require("./helpers");
 
 /**
@@ -47,7 +47,7 @@ function loginMiddleware (sql) {
                     };
 
                     // create a token string
-                    const token = jwt.sign(payload, config.jwtSecret);
+                    const token = jwt.sign(payload, secret.jwtSecret);
                     const data = {
                         name: user.username
                     };
