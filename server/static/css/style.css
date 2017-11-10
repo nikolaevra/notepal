@@ -1,68 +1,73 @@
 body {
-  margin: 0;
-  font-size: 16px;
+    margin: 0;
+    font-size: 16px;
 }
 
 a {
-  color: #00bcd4;
-  font-weight: bold;
-  text-decoration: none;
-  transition: color 0.4s;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.4s;
 }
 
 a:hover {
-  color: #1976d2;
+    color: pink;
+}
+
+.nav-button {
+    margin: 12px;
 }
 
 .text-center {
-  text-align: center;
+    text-align: center;
 }
 
 .top-bar {
-  padding: 10px 15px;
-  margin-bottom: 50px;
+    padding: 10px 15px;
+    margin-bottom: 50px;
 }
 .top-bar::after {
-  content: '';
-  display: block;
-  clear: both;
+    content: '';
+    display: block;
+    clear: both;
 }
 
 .top-bar-left {
-  float: left;
-  font-size: 1.5em;
+    float: left;
+    font-size: 1.5em;
 }
 
 .top-bar-right {
-  float: right;
+    float: right;
+    margin:12px;
 }
 
 .top-bar a,
 .nav a {
-  margin: 0 8px;
+    margin: 0 8px;
 }
 
 .container {
-  margin: 0 auto;
-  text-align: center;
-  width: 700px;
+    margin: 0 auto;
+    text-align: center;
+    width: 700px;
 }
 
 .card-heading {
-  padding: 16px;
+    padding: 16px;
 }
 
 .field-line, .button-line {
-  padding: 16px;
+    padding: 16px;
 }
 
 .error-message {
-  padding: 0 16px;
-  color: tomato;
+    padding: 0 16px;
+    color: tomato;
 }
 
 .success-message {
-  padding: 0 16px;
-  color: green;
+    padding: 0 16px;
+    color: green;
 }
 
