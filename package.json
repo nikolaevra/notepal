@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --use_strict index.js",
-    "debug": "set DEBUG=express,database,mid:auth-check,route:auth,route:api & nodemon --use_strict index.js",
+    "debug": "set DEBUG=express,database,mid:auth-check,route:auth,route:api,local-signup,local-login & nodemon --use_strict index.js",
     "nodebug": "set DEBUG=",
     "bundle": "webpack"
   },

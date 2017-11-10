@@ -19,13 +19,24 @@ function signupMiddleware (sql) {
         let pw = password.trim();
         let un = req.body.name.trim();
 
-        let result = sql.addUser(un, e, pw);
-        if (result) {
-            debug(`new user ${un} created`);
-            return done(null);
-        } else {
-            return done("error message");
-        }
+        sql.getUserByEmail(e).then((user) => {
+            if (user) {
+                done({
+                    name: "user_exists",
+                    message: `User with email ${e} already exists`
+                });
+            } else {
+                let result = sql.addUser(un, e, pw);
+                if (result) {
+                    return done(null);
+                } else {
+                    return done({
+                        name: "sql_error",
+                        message: "Internal server error"
+                    });
+                }
+            }
+        });
     });
 }
 
