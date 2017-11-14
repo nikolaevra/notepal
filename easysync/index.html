@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<script src="https://code.jquery.com/jquery-3.2.1.js"
+        integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsdiff/3.4.0/diff.js"></script>
+<body>
+
+<p>This is the original text:</p>
+<textarea id="a1" rows="4" cols="50" type="text">
+</textarea>
+
+<p id="title">This are the changes that you made:</p>
+<textarea rows="10" cols="100" id="output" for="title"></textarea>
+
+<script>
+
+    $(document).ready(function() {
+        let oldtext = 'ruslan started typing';
+
+        $("#a1").val(oldtext);
+
+        $("#a1").change(function() {
+            let changes = JsDiff.diffChars(oldtext, $("#a1").val());
+            console.log(changes);
+            // change_tracker.push(changes);
+            $("#output").val(JSON.stringify(changes));
+        });
+    });
+</script>
+</body>
+</html>
