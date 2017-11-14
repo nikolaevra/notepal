@@ -8,7 +8,7 @@
 <body>
 
 <p>This is the original text:</p>
-<textarea id="a1" rows="4" cols="50" type="text">
+<textarea id="a1" rows="10" cols="100" type="text">
 </textarea>
 
 <p id="title">This are the changes that you made:</p>
@@ -17,7 +17,7 @@
 <script>
 
     $(document).ready(function() {
-        let oldtext = 'ruslan started typing with anton watching';
+        let oldtext = 'Adult education is essential for Democracy of India. The number of grown up illiterates is great. All college and senior School students should come forward to visit villages in the summer vacation. Each one will teach one there. This will remove illiteracy and strengthen our democracy.';
 
         $("#a1").val(oldtext);
 
@@ -55,26 +55,24 @@
 
     function applyPatch(old, patch) {
         let newtxt = old;
-        let deleted = 0;
-        let inserted = 0;
 
         for (let i = 0; i < patch.length; i++) {
             let front = '';
             let tail = '';
 
             if (patch[i].type === "insert") {
-                tail = newtxt.substring(patch[i].nstart, newtxt.length);
                 front = newtxt.substring(0, patch[i].nstart);
-                inserted = patch[i].nend - patch[i].nstart;
+                tail = newtxt.substring(patch[i].nstart, newtxt.length);
                 newtxt = front + patch[i].val + tail;
             } else if (patch[i].type === "delete") {
-                tail = newtxt.substring(patch[i].oend - deleted + inserted, newtxt.length);
+                let len = patch[i].oend - patch[i].ostart;
                 front = newtxt.substring(0, patch[i].nstart);
-                deleted += patch[i].oend - patch[i].ostart;
+                tail = newtxt.substring(patch[i].nstart + len, newtxt.length);
                 newtxt = front + "" + tail;
             } else if (patch[i].type === "replace") {
-                tail = newtxt.substring(patch[i].oend + inserted - deleted, newtxt.length);
+                let len = patch[i].oend - patch[i].ostart;
                 front = newtxt.substring(0, patch[i].nstart);
+                tail = newtxt.substring(patch[i].nstart + len, newtxt.length);
                 newtxt = front + patch[i].val + tail;
             }
         }
