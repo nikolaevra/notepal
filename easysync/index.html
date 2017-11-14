@@ -3,9 +3,8 @@
 <head>
 </head>
 <script src="https://code.jquery.com/jquery-3.2.1.js"
-        integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jsdiff/3.4.0/diff.js"></script>
+        integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+<script src="difflib.js"></script>
 <body>
 
 <p>This is the original text:</p>
@@ -18,17 +17,69 @@
 <script>
 
     $(document).ready(function() {
-        let oldtext = 'ruslan started typing';
+        let oldtext = 'ruslan started typing with anton watching';
 
         $("#a1").val(oldtext);
 
         $("#a1").change(function() {
-            let changes = JsDiff.diffChars(oldtext, $("#a1").val());
-            console.log(changes);
-            // change_tracker.push(changes);
+            let changes = diffUsingJS(oldtext, $("#a1").val());
+            let result = applyPatch(changes.base, changes.opcodes);
+
+            console.log(result);
             $("#output").val(JSON.stringify(changes));
         });
     });
+
+    function diffUsingJS(base, newtxt) {
+        let sm = new difflib.SequenceMatcher(base, newtxt);
+        let opcodes = sm.get_opcodes();
+
+
+        for (let i = 0; i < opcodes.length; i++) {
+            let substr = newtxt.substring(opcodes[i][3], opcodes[i][4]);
+            opcodes[i] = {
+                type: opcodes[i][0],
+                val: substr,
+                nstart: opcodes[i][3],
+                nend: opcodes[i][4],
+                ostart: opcodes[i][1],
+                oend: opcodes[i][2],
+            };
+        }
+        return {
+            base: base,
+            newtxt: newtxt,
+            opcodes: opcodes,
+        };
+    }
+
+    function applyPatch(old, patch) {
+        let newtxt = old;
+        let deleted = 0;
+        let inserted = 0;
+
+        for (let i = 0; i < patch.length; i++) {
+            let front = '';
+            let tail = '';
+
+            if (patch[i].type === "insert") {
+                tail = newtxt.substring(patch[i].nstart, newtxt.length);
+                front = newtxt.substring(0, patch[i].nstart);
+                inserted = patch[i].nend - patch[i].nstart;
+                newtxt = front + patch[i].val + tail;
+            } else if (patch[i].type === "delete") {
+                tail = newtxt.substring(patch[i].oend - deleted + inserted, newtxt.length);
+                front = newtxt.substring(0, patch[i].nstart);
+                deleted += patch[i].oend - patch[i].ostart;
+                newtxt = front + "" + tail;
+            } else if (patch[i].type === "replace") {
+                tail = newtxt.substring(patch[i].oend + inserted - deleted, newtxt.length);
+                front = newtxt.substring(0, patch[i].nstart);
+                newtxt = front + patch[i].val + tail;
+            }
+        }
+        return newtxt;
+    }
 </script>
 </body>
 </html>
