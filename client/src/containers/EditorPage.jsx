@@ -1,10 +1,9 @@
 import React from 'react';
 import Auth from '../modules/Auth.jsx';
-import Dashboard from '../components/Dashboard.jsx';
-import FileListItem from '../components/FileListItem.jsx';
+import Editor from '../components/Editor.jsx';
 
 
-class DashboardPage extends React.Component {
+class EditorPage extends React.Component {
 
     /**
      * Class constructor.
@@ -13,7 +12,7 @@ class DashboardPage extends React.Component {
         super(props);
 
         this.state = {
-            secretData: ''
+            file: ''
         };
     }
 
@@ -22,31 +21,36 @@ class DashboardPage extends React.Component {
      */
     componentDidMount() {
         const xhr = new XMLHttpRequest();
-        xhr.open('get', '/api/dashboard');
+        xhr.open('get', '/api/editor' + this.formatParams({file: "firstfile"}));
         xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-        // set the authorization HTTP header
         xhr.setRequestHeader('Authorization', `bearer ${Auth.getToken()}`);
         xhr.responseType = 'json';
         xhr.addEventListener('load', () => {
             if (xhr.status === 200) {
                 this.setState({
-                    files: xhr.response.message
+                    secretData: xhr.response.message
                 });
             }
         });
         xhr.send();
     }
 
+    private formatParams( params ){
+        return "?" + Object
+            .keys(params)
+            .map(function(key){
+                return key+"="+encodeURIComponent(params[key])
+            })
+            .join("&")
+    }
+
     /**
      * Render the component.
      */
     render() {
-        let filesList = this.state.files.map(function(name){
-            return <FileListItem>{name}</FileListItem>;
-        });
-        return (<Dashboard children={filesList} />);
+        return (<Editor secretData={this.state.secretData} />);
     }
 
 }
 
-export default DashboardPage;
+export default EditorPage;

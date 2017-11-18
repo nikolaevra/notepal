@@ -5,7 +5,6 @@ import AppBar from 'material-ui/AppBar';
 import FlatButton from 'material-ui/FlatButton';
 
 const Base = ({ children }) => (
-
   <div>
       <AppBar
           title="Notepal"

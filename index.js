@@ -14,7 +14,7 @@ const localSignupStrategy = require('./server/passport/local-signup')(pg_db);
 const localLoginStrategy = require('./server/passport/local-login')(pg_db);
 const authCheckMiddleware = require('./server/middleware/auth-check')(pg_db);
 const authRoutes = require('./server/routes/auth');
-const apiRoutes = require('./server/routes/api');
+const apiRoutes = require('./server/routes/api')(pg_db);
 
 const app = express();
 
@@ -41,5 +41,5 @@ app.use('/api', apiRoutes);
 
 // start the server
 app.listen(PORT, () => {
-    debug(`Server is running on http://localhost:${PORT} or http://127.0.0.1:${PORT}`);
+    console.log(`Server is running on http://localhost:${PORT} or http://127.0.0.1:${PORT}`);
 });

@@ -23,15 +23,13 @@ function encrypt (word) {
 module.exports = {
     getUserByEmail: async function (email) {
         debug(`getUserByEmail: ${email}`);
-        //noinspection UnnecessaryLocalVariableJS
         const result = await _sql.query(`SELECT * FROM notepal.notepal.t_user WHERE email='${esc(email)}' LIMIT 1;`);
         return result.rows[0];
     },
 
     getUserById: async function (id) {
         debug(`getUserById: ${id}`);
-        //noinspection UnnecessaryLocalVariableJS
-        const result = await _sql.query(`SELECT * FROM notepal.notepal.t_user WHERE id='${esc(id)}' LIMIT 1;`);
+        const result = await _sql.query(`SELECT * FROM notepal.notepal.t_user WHERE user_id='${esc(id)}' LIMIT 1;`);
         return result.rows[0];
     },
 
@@ -39,7 +37,22 @@ module.exports = {
         debug(`addUser: ${email}`);
 
         const hash = await encrypt(password);
-        const result = await _sql.query(`INSERT INTO notepal.notepal.t_user (username, email, password) VALUES ('${esc(username)}', '${esc(email)}', '${hash}')`);
+        const result = await _sql.query(`INSERT INTO notepal.notepal.t_user (username, email, password) VALUES ('${esc(username)}', '${esc(email)}', '${hash}');`);
         return !!result;
     },
+
+    addFile: async (userID) => {
+        debug(`addFile`);
+        return await _sql.query(`INSERT INTO notepal.notepal.t_files (user_id, file_data) VALUES ('${userID}', '');`);
+    },
+
+    getAllFiles: async (userID) => {
+        debug(`addFile`);
+        return await _sql.query(
+            `SELECT DISTINCT f.file_id, f.file_data, f.user_id, f.file_recent_date
+            FROM notepal.t_user_file_junct as j
+            JOIN notepal.t_files as f ON  j.user_id = f.user_id
+            WHERE f.user_id='${userID}';`
+        );
+    }
 };
