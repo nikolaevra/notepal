@@ -1,30 +1,24 @@
-import React from 'react';
+import React, {Component} from 'react';
 import Auth from '../modules/Auth.jsx';
-import Dashboard from '../components/Dashboard.jsx';
-import FileListItem from '../components/FileListItem.jsx';
+import FileList from "../components/FileList.jsx";
+import { Card } from 'material-ui/Card';
 
 
-class DashboardPage extends React.Component {
+class DashboardPage extends Component {
 
-    /**
-     * Class constructor.
-     */
     constructor(props) {
         super(props);
 
         this.state = {
-            secretData: ''
+            files: [],
+            selectedFile: null
         };
     }
 
-    /**
-     * This method will be executed after initial rendering.
-     */
     componentDidMount() {
         const xhr = new XMLHttpRequest();
-        xhr.open('get', '/api/dashboard');
+        xhr.open('get', '/api/getUserFiles' + this.formatParams({userId: "123456"}));
         xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-        // set the authorization HTTP header
         xhr.setRequestHeader('Authorization', `bearer ${Auth.getToken()}`);
         xhr.responseType = 'json';
         xhr.addEventListener('load', () => {
@@ -37,16 +31,26 @@ class DashboardPage extends React.Component {
         xhr.send();
     }
 
-    /**
-     * Render the component.
-     */
-    render() {
-        let filesList = this.state.files.map(function(name){
-            return <FileListItem>{name}</FileListItem>;
-        });
-        return (<Dashboard children={filesList} />);
+    formatParams( params ){
+        return "?" + Object
+            .keys(params)
+            .map(function(key){
+                return key+"="+encodeURIComponent(params[key])
+            })
+            .join("&")
     }
 
+    render() {
+        console.log(this.state.files);
+
+        return (
+            <Card className="container">
+                <FileList
+                    files={this.state.files}
+                    onFileSelect={selectedFile => this.setState({selectedFile})}/>
+            </Card>
+        );
+    }
 }
 
 export default DashboardPage;

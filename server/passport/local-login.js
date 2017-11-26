@@ -24,7 +24,8 @@ function loginMiddleware (sql) {
         };
 
         sql.getUserByEmail(userData.email).then((user) => {
-            if (user === undefined) {
+            if (user == 'undefined') {
+                // TODO: Add proper logging here
                 console.log("Wrong email");
 
                 const error = new Error('Incorrect email or password');
@@ -43,9 +44,10 @@ function loginMiddleware (sql) {
                     }
 
                     const payload = {
-                        sub: user.id
+                        sub: user.user_id
                     };
 
+                    console.log(`User ${user.user_id} Successfully Logged in`);
                     // create a token string
                     const token = jwt.sign(payload, secret.jwtSecret);
                     const data = {
