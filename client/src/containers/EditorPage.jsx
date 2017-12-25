@@ -21,7 +21,13 @@ class EditorPage extends React.Component {
      */
     componentDidMount() {
         const xhr = new XMLHttpRequest();
-        xhr.open('get', '/api/editor' + this.formatParams({file: "firstfile"}));
+        xhr.open('get', '/api/editor' + this.formatParams({
+            file: "firstfile",
+            userID: Auth.getUserID()
+        }));
+
+        console.log(Auth.getUserID());
+
         xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         xhr.setRequestHeader('Authorization', `bearer ${Auth.getToken()}`);
         xhr.responseType = 'json';
@@ -50,7 +56,6 @@ class EditorPage extends React.Component {
     render() {
         return (<Editor secretData={this.state.secretData} />);
     }
-
 }
 
 export default EditorPage;

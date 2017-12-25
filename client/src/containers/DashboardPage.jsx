@@ -29,6 +29,7 @@ class DashboardPage extends React.Component {
         xhr.responseType = 'json';
         xhr.addEventListener('load', () => {
             if (xhr.status === 200) {
+                console.log(xhr.response);
                 this.setState({
                     files: xhr.response.message
                 });
@@ -42,9 +43,9 @@ class DashboardPage extends React.Component {
      */
     render() {
         let filesList = this.state.files.map(function(name){
-            return <FileListItem>{name}</FileListItem>;
+            return <FileListItem file={name}></FileListItem>;
         });
-        return (<Dashboard children={filesList} />);
+        return (<Dashboard children={filesList}/>);
     }
 
 }
