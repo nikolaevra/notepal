@@ -41,7 +41,7 @@ class EditorPage extends React.Component {
         xhr.send();
     }
 
-    private formatParams( params ){
+    formatParams( params ){
         return "?" + Object
             .keys(params)
             .map(function(key){

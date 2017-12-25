@@ -1,11 +1,8 @@
 import React, { PropTypes } from 'react';
 import {ListItem} from 'material-ui/List';
 
-const FileListItem = ({
-                          file,
-                          onClick
-                      }) => (
-    <ListItem primaryText={file} onClick={onClick}/>
+const FileListItem = ({ file, onFileSelect }) => (
+    <ListItem primaryText={file} onClick={() => onFileSelect(file)}/>
 );
 
 FileListItem.propTypes = {

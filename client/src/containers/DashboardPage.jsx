@@ -38,14 +38,20 @@ class DashboardPage extends React.Component {
         xhr.send();
     }
 
-    /**
-     * Render the component.
-     */
+    formatParams( params ){
+        return "?" + Object
+            .keys(params)
+            .map(function(key){
+                return key+"="+encodeURIComponent(params[key])
+            })
+            .join("&")
+    }
+
     render() {
         let filesList = this.state.files.map(function(name){
-            return <FileListItem file={name}></FileListItem>;
+            return <FileListItem>{name}</FileListItem>;
         });
-        return (<Dashboard children={filesList}/>);
+        return (<Dashboard children={filesList} />);
     }
 
 }

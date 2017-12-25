@@ -8,7 +8,6 @@ const Base = ({ children }) => (
   <div>
       <AppBar
           title="Notepal"
-          iconClassNameRight="muidocs-icon-navigation-expand-more"
           iconElementRight={Auth.isUserAuthenticated() ? (
               <div className="top-bar-right">
                   <Link to="/logout">Log out</Link>
