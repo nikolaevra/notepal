@@ -6,7 +6,7 @@ const router = new express.Router();
 
 function myRouter(sql) {
 
-    router.get('/api/files', (req, res) => {
+    router.get('/files', (req, res) => {
         const { userId } = req.locals;
 
         sql.getAllFiles(userId).then((data) => {
