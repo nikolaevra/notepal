@@ -2,7 +2,6 @@
  * Created by Ruslan on 11/6/2017.
  */
 const jwt = require('jsonwebtoken');
-const bcrypt = require("bcrypt");
 const PassportLocalStrategy = require('passport-local').Strategy;
 const secret = require("../../secret");
 const helpers = require("./helpers");

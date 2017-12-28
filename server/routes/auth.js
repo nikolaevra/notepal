@@ -76,7 +76,7 @@ function validateLoginForm(payload) {
 }
 
 router.post('/signup', (req, res, next) => {
-    debug(`${req.method} ${req.url}`);
+    console.log(`${req.method} ${req.url}`);
 
     const validationResult = validateSignupForm(req.body);
     if (!validationResult.success) {

@@ -3,7 +3,6 @@
  */
 const express = require('express');
 const router = new express.Router();
-const debug = require('debug')('route:api');
 
 function myRouter(sql) {
 
@@ -31,7 +30,6 @@ function myRouter(sql) {
     });
     return router;
 }
-
 
 module.exports = (db) => {
     return myRouter(db);
