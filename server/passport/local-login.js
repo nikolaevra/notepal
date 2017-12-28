@@ -51,7 +51,6 @@ function loginMiddleware (sql) {
                     const token = jwt.sign(payload, secret.jwtSecret);
                     const data = {
                         name: user.username,
-                        id: user.user_id,
                         is_deleted: user.is_deleted,
                         last_connected: user.last_connected,
                     };

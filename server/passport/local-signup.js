@@ -2,7 +2,6 @@
  * Created by Ruslan on 11/6/2017.
  */
 const PassportLocalStrategy = require('passport-local').Strategy;
-const debug = require('debug')('local-signup');
 
 /**
  * Return the Passport Local Strategy object.
@@ -15,9 +14,11 @@ function signupMiddleware (sql) {
         passReqToCallback: true
     }, (req, email, password, done) => {
 
+        console.log(req.body);
+
         let e = email.trim();
         let pw = password.trim();
-        let un = req.body.name.trim();
+        let un = req.body.username.trim();
 
         sql.getUserByEmail(e).then((user) => {
             if (user) {

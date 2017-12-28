@@ -25,9 +25,9 @@ function validateSignupForm(payload) {
         errors.password = 'Password must have at least 8 characters.';
     }
 
-    if (!payload || typeof payload.name !== 'string' || payload.name.trim().length === 0) {
+    if (!payload || typeof payload.username !== 'string' || payload.username.trim().length === 0) {
         isFormValid = false;
-        errors.name = 'Please provide your name.';
+        errors.username = 'Please provide your name.';
     }
 
     if (!isFormValid) {
@@ -78,6 +78,9 @@ router.post('/signup', (req, res, next) => {
     console.log(`${req.method} ${req.url}`);
 
     const validationResult = validateSignupForm(req.body);
+
+    console.log(req.body);
+
     if (!validationResult.success) {
         return res.status(400).json({
             success: false,
@@ -85,7 +88,6 @@ router.post('/signup', (req, res, next) => {
             errors: validationResult.errors
         });
     }
-
 
     return passport.authenticate('local-signup', (err) => {
         if (err) {
@@ -137,11 +139,11 @@ router.post('/login', (req, res, next) => {
 
                 return res.status(400).json({
                     success: false,
-                    message: err.message
+                    message: err.message,
                 });
             }
 
-            console.log(`[400] ${req.method} ${req.url}:Could not process the form`);
+            console.log(`[400] ${req.method} ${req.url}: Could not process the form`);
             return res.status(400).json({
                 success: false,
                 message: 'Could not process the form.'
@@ -153,7 +155,7 @@ router.post('/login', (req, res, next) => {
             success: true,
             message: 'You have successfully logged in!',
             token,
-            user: userData
+            userData
         });
     })(req, res, next);
 });
