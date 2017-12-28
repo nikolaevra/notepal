@@ -1,7 +1,6 @@
 const express = require('express');
 const validator = require('validator');
 const passport = require('passport');
-const debug = require('debug')('route:auth');
 const router = new express.Router();
 
 /**
@@ -119,6 +118,7 @@ router.post('/signup', (req, res, next) => {
 
 router.post('/login', (req, res, next) => {
     const validationResult = validateLoginForm(req.body);
+
     if (!validationResult.success) {
         console.log(`[400] ${req.method} ${req.url}: Could not validate login form`);
 

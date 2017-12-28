@@ -5,7 +5,6 @@ const { Pool } = require('pg');
 const secret = require('../../secret');
 const bcrypt = require('bcrypt');
 const esc = require('pg-escape');
-const debug = require('debug')('database');
 const SALT = secret.salt;
 
 const _sql = new Pool({
@@ -53,7 +52,7 @@ module.exports = {
         console.log(`addFile`);
 
         return await _sql.query(
-            `SELECT DISTINCT f.file_id, f.file_data, f.user_id, f.file_recent_date
+            `SELECT DISTINCT f.file_id, f.file_data, f.file_recent_date
             FROM notepal.t_user_file_junct as j
             JOIN notepal.t_files as f ON  j.user_id = f.user_id
             WHERE f.user_id='${userID}';`

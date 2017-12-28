@@ -6,20 +6,23 @@ const router = new express.Router();
 
 function myRouter(sql) {
 
-    router.get('/dashboard', (req, res) => {
-        console.log(`[200] ${req.method} ${req.url}`);
+    router.get('/files', (req, res) => {
+        console.log(`Files: [200] ${req.method} ${req.url}`);
+        const { userId } = req.locals;
 
-        res.status(200).json({
-            message: "You're authorized to see this secret message."
+        sql.getAllFiles(userId).then((data) => {
+            res.status(200).json(data.rows);
+        }).catch((err) => {
+            res.status(400).json(err);
         });
     });
 
     router.get('/getUserFiles', (req, res) => {
-        console.log(`[200] ${req.method} ${req.url}`);
+        console.log(`Get User files: [200] ${req.method} ${req.url}`);
         const userId = req.query.userId;
 
         sql.getAllFiles(userId).then((data) => {
-            console.log(files);            
+            console.log(files);
         }).catch((err) => {
             console.log(err);
         });

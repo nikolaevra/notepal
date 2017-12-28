@@ -31,7 +31,7 @@ app.use(passport.initialize());
 passport.use('local-signup', localSignupStrategy);
 passport.use('local-login', localLoginStrategy);
 
-// pass the authenticaion checker middleware
+// pass the authentication checker middleware
 app.use('/api', authCheckMiddleware);
 
 // routes

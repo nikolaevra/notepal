@@ -22,7 +22,7 @@ function gen_auth_middleware (sql) {
             }
 
             const userId = decoded.sub;
-            
+
             // check if a user exists
             return sql.getUserById(userId).then((user) => {
                 if (!user) {
@@ -31,6 +31,8 @@ function gen_auth_middleware (sql) {
                 }
 
                 console.log(`[200] ${req.method} ${req.url}: Found user in DB`);
+                req.locals = { userId: userId };
+
                 return next();
             }).catch((err) => {
                 console.log(`[401] ${req.method} ${req.url}: ${err.message}`);
