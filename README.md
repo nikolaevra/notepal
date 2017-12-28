@@ -42,3 +42,7 @@ Cache-Control: no-cache
 Postman-Token: f65979e3-388a-5bea-6588-5777edd66354
 
 ```
+
+POST: `/file/new`
+
+GET: `/file/:fileid`
