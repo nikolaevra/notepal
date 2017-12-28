@@ -6,29 +6,35 @@ const router = new express.Router();
 
 function myRouter(sql) {
 
-    router.get('/files', (req, res) => {
-        console.log(`Files: [200] ${req.method} ${req.url}`);
+    router.get('/api/files', (req, res) => {
         const { userId } = req.locals;
 
         sql.getAllFiles(userId).then((data) => {
+            console.log(`Get all files: [200] ${req.method} ${req.url}`);
             res.status(200).json(data.rows);
         }).catch((err) => {
+            console.log(`Get all files: [400] ${req.method} ${req.url}`);
+            console.log("DB error: ", err);
             res.status(400).json(err);
         });
     });
 
-    router.get('/getUserFiles', (req, res) => {
-        console.log(`Get User files: [200] ${req.method} ${req.url}`);
-        const userId = req.query.userId;
+    router.post('/file/new', (req, res) => {
+        const { userId } = req.locals;
+        let file_data =
+            (typeof req.body.file_data !== 'undefined' && req.body.file_data ) ? req.body.file_data : '';
 
-        sql.getAllFiles(userId).then((data) => {
-            console.log(files);
+        sql.addFile(userId, file_data).then((result) => {
+            console.log(`Create new file: [200] ${req.method} ${req.url}`);
+
+            res.status(200).json({
+                message: "Successfully created new file",
+                fileid: result.rows[0].file_id
+            });
         }).catch((err) => {
-            console.log(err);
-        });
-
-        res.status(200).json({
-            message: "You're authorized to see this secret message."
+            console.log(`Create new file: [400] ${req.method} ${req.url}`);
+            console.log("DB error: ", err);
+            res.status(400).json(err);
         });
     });
     return router;

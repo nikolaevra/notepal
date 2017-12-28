@@ -44,5 +44,14 @@ Postman-Token: f65979e3-388a-5bea-6588-5777edd66354
 ```
 
 POST: `/file/new`
+```
+POST /api/file/new HTTP/1.1
+Host: ec2-35-169-227-105.compute-1.amazonaws.com
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNzMxOTMyMi1mOGNhLTQ5NDEtOTgzZi1jYThiYzkyYjgzMTMiLCJpYXQiOjE1MTQ0NTYyMzR9.Elw3sGO7jNStoR6GMkaPK9Et7IAlZVvnSxOlY5K83RM
+Cache-Control: no-cache
+Postman-Token: ade067bc-ea03-e78d-f1c4-f9bfb9d4f812
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+```
 
 GET: `/file/:fileid`

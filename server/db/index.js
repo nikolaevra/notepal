@@ -42,10 +42,16 @@ module.exports = {
         return !!result;
     },
 
-    addFile: async (userID) => {
+    addFile: async (userID, data) => {
         console.log(`addFile`);
 
-        return await _sql.query(`INSERT INTO notepal.notepal.t_files (user_id, file_data) VALUES ('${userID}', '');`);
+        return await _sql.query(
+            `INSERT INTO 
+	            notepal.notepal.t_files (user_id, file_data) 
+            VALUES 
+                ('${userID}', '${esc(data)}')
+            RETURNING file_id;`
+        );
     },
 
     getAllFiles: async (userID) => {
