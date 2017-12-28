@@ -1,8 +1,10 @@
-const express = require('express');
-const validator = require('validator');
-const passport = require('passport');
-const debug = require('debug')('route:auth');
-const router = new express.Router();
+'use strict';
+
+var express = require('express');
+var validator = require('validator');
+var passport = require('passport');
+var debug = require('debug')('route:auth');
+var router = new express.Router();
 
 /**
  * Validate the sign up form
@@ -12,9 +14,9 @@ const router = new express.Router();
  *                   errors tips, and a global message for the whole form.
  */
 function validateSignupForm(payload) {
-    const errors = {};
-    let isFormValid = true;
-    let message = '';
+    var errors = {};
+    var isFormValid = true;
+    var message = '';
 
     if (!payload || typeof payload.email !== 'string' || !validator.isEmail(payload.email)) {
         isFormValid = false;
@@ -37,8 +39,8 @@ function validateSignupForm(payload) {
 
     return {
         success: isFormValid,
-        message,
-        errors
+        message: message,
+        errors: errors
     };
 }
 
@@ -50,9 +52,9 @@ function validateSignupForm(payload) {
  *                   errors tips, and a global message for the whole form.
  */
 function validateLoginForm(payload) {
-    const errors = {};
-    let isFormValid = true;
-    let message = '';
+    var errors = {};
+    var isFormValid = true;
+    var message = '';
 
     if (!payload || typeof payload.email !== 'string' || payload.email.trim().length === 0) {
         isFormValid = false;
@@ -70,15 +72,15 @@ function validateLoginForm(payload) {
 
     return {
         success: isFormValid,
-        message,
-        errors
+        message: message,
+        errors: errors
     };
 }
 
-router.post('/signup', (req, res, next) => {
-    debug(`${req.method} ${req.url}`);
+router.post('/signup', function (req, res, next) {
+    debug(req.method + ' ' + req.url);
 
-    const validationResult = validateSignupForm(req.body);
+    var validationResult = validateSignupForm(req.body);
     if (!validationResult.success) {
         return res.status(400).json({
             success: false,
@@ -87,10 +89,9 @@ router.post('/signup', (req, res, next) => {
         });
     }
 
-
-    return passport.authenticate('local-signup', (err) => {
+    return passport.authenticate('local-signup', function (err) {
         if (err) {
-            console.log(err.message);
+            debug(err.message);
 
             if (err.name === 'user_exists') {
                 // error name generated in local-login.js
@@ -109,7 +110,7 @@ router.post('/signup', (req, res, next) => {
             });
         }
 
-        console.log(`new user created`);
+        debug('new user created');
         return res.status(200).json({
             success: true,
             message: 'You have successfully signed up! Now you should be able to log in.'
@@ -117,11 +118,10 @@ router.post('/signup', (req, res, next) => {
     })(req, res, next);
 });
 
-router.post('/login', (req, res, next) => {
-    const validationResult = validateLoginForm(req.body);
+router.post('/login', function (req, res, next) {
+    var validationResult = validateLoginForm(req.body);
     if (!validationResult.success) {
-        console.log(`[400] ${req.method} ${req.url}: Could not validate login form`);
-
+        debug('[400] ' + req.method + ' ' + req.url + ': Could not validate login form');
         return res.status(400).json({
             success: false,
             message: validationResult.message,
@@ -129,30 +129,28 @@ router.post('/login', (req, res, next) => {
         });
     }
 
-
-    return passport.authenticate('local-login', (err, token, userData) => {
+    return passport.authenticate('local-login', function (err, token, userData) {
         if (err) {
             if (err.name === 'IncorrectCredentialsError') {
-                console.log(`[400] ${req.method} ${req.url}: Incorrect credentials`);
-
+                debug('[400] ' + req.method + ' ' + req.url + ': Incorrect credentials');
                 return res.status(400).json({
                     success: false,
                     message: err.message
                 });
             }
 
-            console.log(`[400] ${req.method} ${req.url}:Could not process the form`);
+            debug('[400] ' + req.method + ' ' + req.url + ':Could not process the form');
             return res.status(400).json({
                 success: false,
                 message: 'Could not process the form.'
             });
         }
 
-        console.log(`[200] ${req.method} ${req.url}: Successfully logged in`);
+        debug('[200] ' + req.method + ' ' + req.url + ': Successfully logged in');
         return res.json({
             success: true,
             message: 'You have successfully logged in!',
-            token,
+            token: token,
             user: userData
         });
     })(req, res, next);
